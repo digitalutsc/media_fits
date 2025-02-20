@@ -1,0 +1,9 @@
+services:
+  fits.context_utils:
+    class: Drupal\media_fits\FitsContextUtils
+    arguments: ['@entity_type.manager', '@context.repository', '@context.handler', '@entity.form_builder', '@theme.manager', '@current_route_match']
+  fits.file_route_context_provider:
+    class: Drupal\media_fits\ContextProvider\FileRouteContextProvider
+    arguments: ['@current_route_match']
+    tags:
+      - { name: 'context_provider' }

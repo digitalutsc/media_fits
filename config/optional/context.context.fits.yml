@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - fits
+label: Fits
+name: fits
+group: 'Technical Metadata'
+description: 'Generate metadata for Files'
+requireAllConditions: false
+disabled: false
+conditions: {  }
+reactions:
+  fits_reaction:
+    id: fits_reaction
+    actions: fits_action
+    saved: false
+weight: 0
