@@ -64,18 +64,6 @@ function execute_media_fits_action(EntityInterface $entity) {
 }
 
 /**
- * Check if string end with sub-string https://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php.
- */
-function end_with($haystack, $needle): bool {
-  $length = strlen($needle);
-  if (!$length) {
-    return TRUE;
-  }
-
-  return substr($haystack, -$length) === $needle;
-}
-
-/**
  * Modify the Help text field to repurpose its use to contain Jmespath.
  */
 function media_fits_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
