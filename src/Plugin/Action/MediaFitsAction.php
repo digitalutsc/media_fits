@@ -8,12 +8,12 @@ use Drupal\advancedqueue\Entity\Queue;
 use Drupal\advancedqueue\Job;
 
 /**
- * Provides a 'FitsAction' action.
+ * Provides a 'MediaFitsAction' action.
  *
  * @Action(
  *  id = "media_fits_action",
  *  label = @Translation("FITS - Generate and Extract Technical metadata for Media"),
- *  type = "file",
+ *  type = "media",
  *  category = @Translation("Custom")
  * )
  */
@@ -22,24 +22,24 @@ class MediaFitsAction extends ActionBase {
   /**
    * Implements access()
    */
-  public function access($file, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($media, AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\file\FileInterface $file */
-    $access = $file->access('update', $account, TRUE)
-      ->andIf($file->access('edit', $account, TRUE));
+    $access = $media->access('update', $account, TRUE)
+      ->andIf($media->access('edit', $account, TRUE));
     return $return_as_object ? $access : $access->isAllowed();
   }
 
   /**
    * Implements execute().
    */
-  public function execute($file = NULL) {
+  public function execute($media = NULL) {
     /** @var \Drupal\file\FileInterface $file */
-    $config = \Drupal::config('fits.fitsconfig');
+    $config = \Drupal::config('media_fits.fitsconfig');
     // Create a job and add to Advanced Queue.
     $payload = [
-      'fid' => $file->id(),
-      'file_name' => $file->getFilename(),
-      'type' => $file->getEntityTypeId(),
+      'mid' => $media->id(),
+      'media_name' => $media->getName(),
+      'type' => $media->getEntityTypeId(),
       'action' => "extract_Fits",
       'max_tries' => $config->get("aqj-max-retries"),
       'retry_delay' => $config->get("aqj-retry_delay"),

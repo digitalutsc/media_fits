@@ -5,5 +5,5 @@ dependencies:
     - media_fits
 id: media_fits_action
 label: 'FITS - Generate and Extract Technical metadata for Media'
-type: file
+type: media
 plugin: media_fits_action

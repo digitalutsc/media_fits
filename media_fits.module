@@ -17,7 +17,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 function media_fits_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     // Main module help for the islandora_lite_fits module.
-    case 'help.page.islandora_lite_fits':
+    case 'help.page.islandora_lite_media_fits':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('This module represent DSU&#039;&#039;s approach toward Fits in our Islandora Lite Stack') . '</p>';
@@ -33,7 +33,7 @@ function media_fits_help($route_name, RouteMatchInterface $route_match) {
  */
 function media_fits_theme() {
   return [
-    'islandora_lite_fits' => [
+    'islandora_lite_media_fits' => [
       'render element' => 'children',
     ],
   ];
@@ -44,7 +44,7 @@ function media_fits_theme() {
  */
 function media_fits_file_insert(EntityInterface $entity) {
   // Only extract Fits for File level only.
-  if ('File' === $entity->getEntityType()->getLabel()->getUntranslatedString() && 1 === \Drupal::config('fits.fitsconfig')->get('fits-extract-ingesting')) {
+  if ('File' === $entity->getEntityType()->getLabel()->getUntranslatedString() && 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
     execute_media_fits_action($entity);
   }
 }
@@ -54,12 +54,12 @@ function media_fits_file_insert(EntityInterface $entity) {
  */
 function execute_media_fits_action(EntityInterface $entity) {
   // Fix warning when Config form hasn't been setup.
-  $config = \Drupal::config('fits.fitsconfig');
+  $config = \Drupal::config('media_fits.fitsconfig');
   if (!isset($config) || empty($config->get('fits-advancedqueue_id'))) {
     return;
   }
   $file = File::load($entity->id());
-  $utils = \Drupal::service('fits.context_utils');
+  $utils = \Drupal::service('media_fits.context_utils');
   $utils->executeFileReactions('\Drupal\fits\Plugin\ContextReaction\FitsReaction', $file);
 }
 

@@ -1,6 +1,6 @@
 media_fits.fits_config_form:
   title: 'Fits for Media'
-  route_name: fits.fits_config_form
+  route_name: media_fits.fits_config_form
   description: 'Manage Fits Configuration in Media'
   parent: system.admin_config_system
-  weight: 99
+  weight: 100

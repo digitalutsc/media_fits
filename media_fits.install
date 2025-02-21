@@ -13,7 +13,7 @@ function fits_requirements($phase): array {
   if (!class_exists('JmesPath\\AstRuntime')) {
     $arguments = [
       ':docs' => 'https://www.drupal.org/docs/8/theming-drupal-8/adding-stylesheets-css-and-javascript-js-to-a-drupal-8-theme#external',
-      ':readme' => 'https://www.drupal.org/project/fits',
+      ':readme' => 'https://www.drupal.org/project/media_fits',
       ':lib' => "composer require 'mtdowling/jmespath.php'",
     ];
 

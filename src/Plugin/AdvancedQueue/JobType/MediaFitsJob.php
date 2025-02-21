@@ -4,7 +4,9 @@ namespace Drupal\media_fits\Plugin\AdvancedQueue\JobType;
 
 use function JmesPath\search;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
+use Drupal\file\FileInterface;
+use Drupal\media\Plugin\media\Source\File;
 use Drupal\advancedqueue\Job;
 use Drupal\advancedqueue\Plugin\AdvancedQueue\JobType\JobTypeBase;
 use GuzzleHttp\Client;
@@ -32,8 +34,8 @@ class MediaFitsJob extends JobTypeBase {
       $this->pluginDefinition['retry_delay'] = $payload['retry_delay'];
 
       /** @var \Drupal\file\FileInterface $file */
-      $file = File::load($payload['fid']);
-      $result = $this->extractFits($file);
+      $media = Media::load($payload['mid']);
+      $result = $this->extractFits($media);
 
       if ($result['result'] === TRUE) {
         return JobResult::success($this->t("%outcome", ['%outcome' => $result['outcome']]));
@@ -51,13 +53,55 @@ class MediaFitsJob extends JobTypeBase {
   /**
    * Extract Fits.
    */
-  public function extractFits($file = NULL) {
-    /** @var \Drupal\file\FileInterface $file */
-    $config = \Drupal::config('fits.fitsconfig');
+  public function extractFits($media = NULL) {
+    /** @var \Drupal\media\MediaInterface $media */
+    $config = \Drupal::config('media_fits.fitsconfig');
     $report = "";
     $sucess = TRUE;
-    if (!isset($file)) {
+    if (!isset($media)) {
       return;
+    }
+    
+    // Get the media fields
+    $file = $media->getSource();
+
+    // get the main source file
+    $source = $media->getSource();
+    if (!$source instanceof File) {
+      $report .= "Failed to get the media's source file.\n";
+      return ['result' => FALSE, "outcome" => $report];
+    }
+   
+    $fid = $source->getSourceFieldValue($media);
+    $file = \Drupal::entityTypeManager()->getStorage('file')->load($fid);
+    
+    // Extract Fits from xml.
+    $fits_result = $this->getFits($file);
+
+    if ($fits_result['code'] === 500) {
+      $report .= 'Get Fits XML: ' . $fits_result['message'] . "\n";
+      return ['result' => FALSE, "outcome" => $report];
+    }
+
+    $report .= "Get Fits XML: " . $fits_result['message'] . "\n";
+    $fits_xml = $fits_result['output'];
+
+    $fits = simplexml_load_string($fits_xml);
+    $fit_json = json_encode($fits);
+
+    // Store the whole fits to json field.
+    if ($media->hasField("field_media_file_fits")) {
+      
+      // Update fits field
+      $media->field_media_file_fits->setValue($fit_json);
+      drupal_log($fit_json);
+      drupal_log("Saving the media");
+      // Extract selective fields and save to other fields.
+      $media->save();
+    }
+    else {
+      $report = "Media doesn't have JSON Fits field";
+      return ['result' => $sucess, "outcome" => $report];
     }
     // TODO: write code to have metadata in file 
     return ['result' => $sucess, "outcome" => $report];
@@ -118,8 +162,8 @@ class MediaFitsJob extends JobTypeBase {
   /**
    * Rest call to Fits.
    */
-  public function getFits(File $file) {
-    $config = \Drupal::config('fits.fitsconfig');
+  public function getFits($file) {
+    $config = \Drupal::config('media_fits.fitsconfig');
     if ($config->get("fits-method") === "remote") {
       try {
         $options = [
