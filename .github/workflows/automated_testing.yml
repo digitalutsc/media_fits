@@ -7,5 +7,5 @@ jobs:
     uses: digitalutsc/reusable_workflows/.github/workflows/ci-testing.yml@main
     with:
       module_name: fits
-      composer_name: digitalutsc/drupal_fits
+      composer_name: digitalutsc/media_fits
       test_suite: functional
