@@ -2,17 +2,17 @@ langcode: en
 status: true
 dependencies:
   module:
-    - fits
-label: Fits
-name: fits
+    - media_fits
+label: Fits on media
+name: media_fits
 group: 'Technical Metadata'
-description: 'Generate metadata for Files'
+description: 'Generate metadata for Media'
 requireAllConditions: false
 disabled: false
 conditions: {  }
 reactions:
   fits_reaction:
-    id: fits_reaction
-    actions: fits_action
+    id: media_fits_reaction
+    actions: media_fits_action
     saved: false
 weight: 0
