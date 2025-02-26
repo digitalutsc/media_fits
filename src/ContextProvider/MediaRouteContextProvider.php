@@ -13,7 +13,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 /**
  * Sets the current file as a context on file routes.
  */
-class FileRouteContextProvider implements ContextProviderInterface {
+class MediaRouteContextProvider implements ContextProviderInterface {
 
   use StringTranslationTrait;
 
@@ -38,17 +38,17 @@ class FileRouteContextProvider implements ContextProviderInterface {
    * {@inheritdoc}
    */
   public function getRuntimeContexts(array $unqualified_context_ids) {
-    $context_definition = EntityContextDefinition::fromEntityTypeId('file')->setLabel(NULL)->setRequired(FALSE);
+    $context_definition = EntityContextDefinition::fromEntityTypeId('media')->setLabel(NULL)->setRequired(FALSE);
 
     $value = NULL;
 
     $route_object = $this->routeMatch->getRouteObject();
     if ($route_object) {
       $route_contexts = $route_object->getOption('parameters');
-      if ($route_contexts && isset($route_contexts['file'])) {
-        $file = $this->routeMatch->getParameter('file');
-        if ($file) {
-          $value = $file;
+      if ($route_contexts && isset($route_contexts['media'])) {
+        $media = $this->routeMatch->getParameter('media');
+        if ($media) {
+          $value = $media;
         }
       }
     }
@@ -58,15 +58,15 @@ class FileRouteContextProvider implements ContextProviderInterface {
 
     $context = new Context($context_definition, $value);
     $context->addCacheableDependency($cacheability);
-    return ['file' => $context];
+    return ['media' => $context];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getAvailableContexts() {
-    $context = EntityContext::fromEntityTypeId('file', $this->t('File from URL'));
-    return ['file' => $context];
+    $context = EntityContext::fromEntityTypeId('media', $this->t('Media from URL'));
+    return ['media' => $context];
   }
 
 }

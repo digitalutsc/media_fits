@@ -6,7 +6,7 @@ use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\advancedqueue\Entity\Queue;
 use Drupal\advancedqueue\Job;
-
+use Drupal\media\Entity\Media;
 /**
  * Provides a 'MediaFitsAction' action.
  *
@@ -23,7 +23,7 @@ class MediaFitsAction extends ActionBase {
    * Implements access()
    */
   public function access($media, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    /** @var \Drupal\file\FileInterface $file */
+    /** @var \Drupal\file\MediaInterface $file */
     $access = $media->access('update', $account, TRUE)
       ->andIf($media->access('edit', $account, TRUE));
     return $return_as_object ? $access : $access->isAllowed();
@@ -33,7 +33,7 @@ class MediaFitsAction extends ActionBase {
    * Implements execute().
    */
   public function execute($media = NULL) {
-    /** @var \Drupal\file\FileInterface $file */
+    /** @var \Drupal\media\Entity\Media $media */
     $config = \Drupal::config('media_fits.fitsconfig');
     // Create a job and add to Advanced Queue.
     $payload = [

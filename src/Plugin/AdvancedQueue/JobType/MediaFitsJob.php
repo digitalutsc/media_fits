@@ -62,9 +62,6 @@ class MediaFitsJob extends JobTypeBase {
       return;
     }
     
-    // Get the media fields
-    $file = $media->getSource();
-
     // get the main source file
     $source = $media->getSource();
     if (!$source instanceof File) {

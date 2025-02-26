@@ -8,10 +8,10 @@ use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
-use Drupal\file\FileInterface;
-use Drupal\media_fits\ContextProvider\FileContextProvider;
-use Drupal\media_fits\FitsContextManager;
-
+use Drupal\media\MediaInterface;
+use Drupal\media_fits\ContextProvider\MediaContextProvider;
+use Drupal\media_fits\MediaFitsContextManager;
+use Drupal\media\Entity\Media;
 /**
  * Utility functions for firing off context reactions.
  */
@@ -19,7 +19,7 @@ class MediaFitsContextUtils {
   /**
    * Context manager.
    *
-   * @var \Drupal\media_fits\FitsContextManager
+   * @var \Drupal\media_fits\MediaFitsContextManager
    */
   protected $contextManager;
 
@@ -62,15 +62,15 @@ class MediaFitsContextUtils {
    *
    * @param string $reaction_type
    *   Reaction type.
-   * @param \Drupal\node\FileInterface $file
+   * @param \Drupal\media\MediaInterface $media
    *   File to evaluate contexts and pass to reaction.
    */
-  public function executeFileReactions($reaction_type, FileInterface $file) {
-    $provider = new FileContextProvider($file);
+  public function executeFileReactions($reaction_type, MediaInterface $media) {
+    $provider = new MediaContextProvider($media);
     $provided = $provider->getRuntimeContexts([]);
     $this->contextManager->evaluateContexts($provided);
     foreach ($this->contextManager->getActiveReactions($reaction_type) as $reaction) {
-      $reaction->execute($file);
+      $reaction->execute($media);
     }
   }
 

@@ -7,9 +7,10 @@
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\file\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\media\Entity\Media;
+use Drupal\file\Entity\File;
 
 /**
  * Implements hook_help().
@@ -40,11 +41,12 @@ function media_fits_theme() {
 }
 
 /**
- * Implement media_fits_file_insert().
+ * Implement media_fits_node_insert().
  */
-function media_fits_file_insert(EntityInterface $entity) {
+function media_fits_media_insert(EntityInterface $entity) {
   // Only extract Fits for File level only.
-  if ('File' === $entity->getEntityType()->getLabel()->getUntranslatedString() && 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
+  if ('Media' === $entity->getEntityType()->getLabel()->getUntranslatedString() 
+      && 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
     execute_media_fits_action($entity);
   }
 }
@@ -58,9 +60,9 @@ function execute_media_fits_action(EntityInterface $entity) {
   if (!isset($config) || empty($config->get('fits-advancedqueue_id'))) {
     return;
   }
-  $file = File::load($entity->id());
+  $media = Media::load($entity->id()); 
   $utils = \Drupal::service('media_fits.context_utils');
-  $utils->executeFileReactions('\Drupal\fits\Plugin\ContextReaction\FitsReaction', $file);
+  $utils->executeFileReactions('\Drupal\media_fits\Plugin\ContextReaction\MediaFitsReaction', $media);
 }
 
 /**
