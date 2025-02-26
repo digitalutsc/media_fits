@@ -59,7 +59,8 @@ class MediaFitsJob extends JobTypeBase {
     $report = "";
     $sucess = TRUE;
     if (!isset($media)) {
-      return;
+      $report .= "Failed to get the media.\n";
+      return ['result' => FALSE, "outcome" => $report];
     }
     
     // get the main source file
@@ -71,7 +72,10 @@ class MediaFitsJob extends JobTypeBase {
    
     $fid = $source->getSourceFieldValue($media);
     $file = \Drupal::entityTypeManager()->getStorage('file')->load($fid);
-    
+    if (!isset($file)) {
+      $report .= "Failed to get the file in the media.\n";
+      return ['result' => FALSE, "outcome" => $report];
+    }
     // Extract Fits from xml.
     $fits_result = $this->getFits($file);
 
