@@ -15,7 +15,7 @@ use Drupal\fits\FitsContextManager;
 /**
  * Utility functions for firing off context reactions.
  */
-class FitsContextUtils {
+class MediaFitsContextUtils {
   /**
    * Context manager.
    *

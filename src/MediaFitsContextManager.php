@@ -11,7 +11,7 @@ use Drupal\Core\Plugin\ContextAwarePluginInterface;
 /**
  * Provide additional bits to assist Contexts managing.
  */
-class FitsContextManager extends ContextManager {
+class MediaFitsContextManager extends ContextManager {
 
   /**
    * Evaluate all context conditions.
