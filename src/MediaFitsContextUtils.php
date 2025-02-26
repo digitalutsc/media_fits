@@ -47,7 +47,7 @@ class MediaFitsContextUtils {
     ThemeManagerInterface $themeManager,
     RouteMatchInterface $currentRouteMatch
   ) {
-    $this->contextManager = new FitsContextManager(
+    $this->contextManager = new MediaFitsContextManager(
       $entityTypeManager,
       $contextRepository,
       $contextHandler,
