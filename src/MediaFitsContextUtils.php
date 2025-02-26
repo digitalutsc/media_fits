@@ -9,8 +9,8 @@ use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\file\FileInterface;
-use Drupal\fits\ContextProvider\FileContextProvider;
-use Drupal\fits\FitsContextManager;
+use Drupal\media_fits\ContextProvider\FileContextProvider;
+use Drupal\media_fits\FitsContextManager;
 
 /**
  * Utility functions for firing off context reactions.
@@ -19,7 +19,7 @@ class MediaFitsContextUtils {
   /**
    * Context manager.
    *
-   * @var \Drupal\fits\FitsContextManager
+   * @var \Drupal\media_fits\FitsContextManager
    */
   protected $contextManager;
 
