@@ -95,8 +95,7 @@ class MediaFitsJob extends JobTypeBase {
       
       // Update fits field
       $media->field_media_file_fits->setValue($fit_json);
-      drupal_log($fit_json);
-      drupal_log("Saving the media");
+
       // Extract selective fields and save to other fields.
       $media->save();
     }

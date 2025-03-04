@@ -41,13 +41,36 @@ function media_fits_theme() {
 }
 
 /**
- * Implement media_fits_node_insert().
+ * Implement media_fits_media_insert().
  */
 function media_fits_media_insert(EntityInterface $entity) {
   // Only extract Fits for File level only.
   if ('Media' === $entity->getEntityType()->getLabel()->getUntranslatedString() 
       && 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
     execute_media_fits_action($entity);
+  }
+}
+
+/**
+ * Implement media_fits_media_update().
+ */
+function media_fits_media_update(EntityInterface $entity) {
+  // Only extract Fits for File level only.
+  if ('Media' === $entity->getEntityType()->getLabel()->getUntranslatedString() 
+      && 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
+    
+    $media = Media::load($entity->id()); 
+    $source_field_name = $media->getSource()->getConfiguration()['source_field'];
+
+    $current_file_id = $media->get($source_field_name)->target_id;
+    $previous_revision_id = $media->getRevisionId() - 1;
+    $previous_revision = \Drupal::entityTypeManager()->getStorage('media')->loadRevision($previous_revision_id);
+    $previous_file_id = $previous_revision->get($source_field_name)->target_id;
+      
+    if ($current_file_id !== $previous_file_id) {
+      // A new file ID was generated.
+      execute_media_fits_action($entity);
+    } 
   }
 }
 
