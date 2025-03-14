@@ -65,7 +65,12 @@ function media_fits_media_update(EntityInterface $entity) {
     $current_file_id = $media->get($source_field_name)->target_id;
     $previous_revision_id = $media->getRevisionId() - 1;
     $previous_revision = \Drupal::entityTypeManager()->getStorage('media')->loadRevision($previous_revision_id);
-    $previous_file_id = $previous_revision->get($source_field_name)->target_id;
+
+    if (isset($source_field_name) && $previous_revision->hasField($source_field_name)) {
+      $previous_file_id = $previous_revision->get($source_field_name)->target_id;
+    } else {
+      $previous_file_id = null; // or any other default value or action
+    }
       
     if ($current_file_id !== $previous_file_id) {
       // A new file ID was generated.
