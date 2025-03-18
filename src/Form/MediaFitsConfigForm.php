@@ -78,7 +78,8 @@ class MediaFitsConfigForm extends ConfigFormBase {
         '#description' => $this->t('For example: <code>http://localhost:8080/fits/examine</code>'),
       ];
     }
-    elseif ($form_state->getValues()['method'] === "local" || (empty($form_state->getValues()['method']) && $config->get("fits-method") === "local")) {
+    elseif (array_key_exists("method", $form_state->getValues()) && $form_state->getValues()['method'] === "local" 
+    || (empty($form_state->getValues()['method']) && $config->get("fits-method") === "local")) {
       $form['container']['fits-services-config']['textfields_container']['fits-path'] = [
         '#type' => 'textfield',
         '#title' => $this
