@@ -54,7 +54,7 @@ function media_fits_media_insert(EntityInterface $entity) {
 /**
  * Implement media_fits_media_update().
  */
-function media_fits_media_update(EntityInterface $entity) {
+/*function media_fits_media_update(EntityInterface $entity) {
   // Only extract Fits for File level only.
   if ('Media' === $entity->getEntityType()->getLabel()->getUntranslatedString() 
       && 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
@@ -77,7 +77,7 @@ function media_fits_media_update(EntityInterface $entity) {
       execute_media_fits_action($entity);
     } 
   }
-}
+}*/
 
 /**
  * Shared function call for execute Fits Action.
