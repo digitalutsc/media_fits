@@ -90,19 +90,26 @@ class MediaFitsJob extends JobTypeBase {
     $fits = simplexml_load_string($fits_xml);
     $fit_json = json_encode($fits);
 
-    // Store the whole fits to json field.
-    if ($media->hasField("field_media_file_fits")) {
-      
-      // Update fits field
-      $media->field_media_file_fits->setValue($fit_json);
-
-      // Extract selective fields and save to other fields.
-      $media->save();
+    if ($fit_json !== "false") {
+      // Store the whole fits to json field.
+      if ($media->hasField("field_media_file_fits")) {
+        
+        // Update fits field
+        $media->field_media_file_fits->setValue($fit_json);
+  
+        // Extract selective fields and save to other fields.
+        $media->save();
+      }
+      else {
+        $report = "Media doesn't have JSON Fits field";
+        return ['result' => $sucess, "outcome" => $report];
+      }
     }
     else {
-      $report = "Media doesn't have JSON Fits field";
-      return ['result' => $sucess, "outcome" => $report];
+      $report .= "Unable to generate technical metadata for file, Please check the Fits configuration again.\n";
+      return ['result' => FALSE, "outcome" => $report];
     }
+    
     // TODO: write code to have metadata in file 
     return ['result' => $sucess, "outcome" => $report];
   }
