@@ -90,7 +90,7 @@ class MediaFitsJob extends JobTypeBase {
     $fits = simplexml_load_string($fits_xml);
     $fit_json = json_encode($fits);
 
-    if ($fit_json !== "false") {
+    if (json_last_error() == JSON_ERROR_NONE && $fit_json !== "false") {
       // Store the whole fits to json field.
       if ($media->hasField("field_media_file_fits")) {
         
