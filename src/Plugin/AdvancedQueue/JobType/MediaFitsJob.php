@@ -102,7 +102,7 @@ class MediaFitsJob extends JobTypeBase {
       }
       else {
         $report = "Media doesn't have JSON Fits field";
-        return ['result' => $sucess, "outcome" => $report];
+        return ['result' => FALSE, "outcome" => $report];
       }
     }
     else {
