@@ -11,6 +11,7 @@ use Drupal\advancedqueue\Job;
 use Drupal\advancedqueue\Plugin\AdvancedQueue\JobType\JobTypeBase;
 use GuzzleHttp\Client;
 use Drupal\advancedqueue\JobResult;
+use GuzzleHttp\Psr7\Stream;
 
 /**
  * Fits Job definition.
@@ -177,12 +178,13 @@ class MediaFitsJob extends JobTypeBase {
           'base_uri' => $config->get("fits-server-url"),
         ];
         $client = new Client($options);
+        $fileStream = new Stream(fopen($file->getFileUri(), 'r'));
         $response = $client->post($config->get("fits-server-url"), [
           'multipart' => [
             [
               'name' => 'datafile',
               'filename' => $file->label(),
-              'contents' => file_get_contents($file->getFileUri()),
+              'contents' => $fileStream, //file_get_contents($file->getFileUri()),
             ],
           ],
         ]);
