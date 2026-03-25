@@ -64,7 +64,7 @@ class MediaFitsReaction extends ContextReactionPluginBase implements ContainerFa
   /**
    * {@inheritdoc}
    */
-  public function execute(EntityInterface $entity = NULL) {
+  public function execute(?EntityInterface $entity = NULL) {
     $config = $this->getConfiguration();
     $action_id = $config['actions'];
     $action = $this->actionStorage->load($action_id);

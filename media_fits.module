@@ -5,12 +5,9 @@
  * Contains fits.module.
  */
 
-use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\media\Entity\Media;
-use Drupal\file\Entity\File;
 
 /**
  * Implements hook_help().
@@ -45,7 +42,7 @@ function media_fits_theme() {
  */
 function media_fits_media_insert(EntityInterface $entity) {
   // Only extract Fits for File level only.
-  if ('Media' === $entity->getEntityType()->getLabel()->getUntranslatedString() 
+  if ('Media' === $entity->getEntityType()->getLabel()->getUntranslatedString()
       && 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
     execute_media_fits_action($entity);
   }
@@ -55,28 +52,30 @@ function media_fits_media_insert(EntityInterface $entity) {
  * Implement media_fits_media_update().
  */
 /*function media_fits_media_update(EntityInterface $entity) {
-  // Only extract Fits for File level only.
-  if ('Media' === $entity->getEntityType()->getLabel()->getUntranslatedString() 
-      && 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
-    
-    $media = Media::load($entity->id()); 
-    $source_field_name = $media->getSource()->getConfiguration()['source_field'];
+// Only extract Fits for File level only.
+if ('Media' === $entity->getEntityType()->getLabel()->getUntranslatedString()
+&& 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
 
-    $current_file_id = $media->get($source_field_name)->target_id;
-    $previous_revision_id = $media->getRevisionId() - 1;
-    $previous_revision = \Drupal::entityTypeManager()->getStorage('media')->loadRevision($previous_revision_id);
+$media = Media::load($entity->id());
+$source_field_name = $media->getSource()->getConfiguration()['source_field'];
 
-    if (isset($source_field_name) && (isset($previous_revision) && $previous_revision->hasField($source_field_name))) {
-      $previous_file_id = $previous_revision->get($source_field_name)->target_id;
-    } else {
-      $previous_file_id = null; // or any other default value or action
-    }
-      
-    if ($current_file_id !== $previous_file_id) {
-      // A new file ID was generated.
-      execute_media_fits_action($entity);
-    } 
-  }
+$current_file_id = $media->get($source_field_name)->target_id;
+$previous_revision_id = $media->getRevisionId() - 1;
+$previous_revision = \Drupal::entityTypeManager()->getStorage('media')->loadRevision($previous_revision_id);
+
+if (isset($source_field_name) && (isset($previous_revision) && $previous_revision->hasField($source_field_name))) {
+$previous_file_id = $previous_revision->get($source_field_name)->target_id;
+}
+else {
+// Or any other default value or action.
+$previous_file_id = NULL;
+}
+
+if ($current_file_id !== $previous_file_id) {
+// A new file ID was generated.
+execute_media_fits_action($entity);
+}
+}
 }*/
 
 /**
@@ -88,7 +87,7 @@ function execute_media_fits_action(EntityInterface $entity) {
   if (!isset($config) || empty($config->get('fits-advancedqueue_id'))) {
     return;
   }
-  $media = Media::load($entity->id()); 
+  $media = Media::load($entity->id());
   $utils = \Drupal::service('media_fits.context_utils');
   $utils->executeFileReactions('\Drupal\media_fits\Plugin\ContextReaction\MediaFitsReaction', $media);
 }
