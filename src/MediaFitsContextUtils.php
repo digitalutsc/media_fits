@@ -10,8 +10,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\media\MediaInterface;
 use Drupal\media_fits\ContextProvider\MediaContextProvider;
-use Drupal\media_fits\MediaFitsContextManager;
-use Drupal\media\Entity\Media;
+
 /**
  * Utility functions for firing off context reactions.
  */
@@ -45,7 +44,7 @@ class MediaFitsContextUtils {
     ContextHandlerInterface $contextHandler,
     EntityFormBuilderInterface $entityFormBuilder,
     ThemeManagerInterface $themeManager,
-    RouteMatchInterface $currentRouteMatch
+    RouteMatchInterface $currentRouteMatch,
   ) {
     $this->contextManager = new MediaFitsContextManager(
       $entityTypeManager,

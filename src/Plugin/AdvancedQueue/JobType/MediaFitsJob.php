@@ -3,9 +3,7 @@
 namespace Drupal\media_fits\Plugin\AdvancedQueue\JobType;
 
 use function JmesPath\search;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\media\Entity\Media;
-use Drupal\file\FileInterface;
 use Drupal\media\Plugin\media\Source\File;
 use Drupal\advancedqueue\Job;
 use Drupal\advancedqueue\Plugin\AdvancedQueue\JobType\JobTypeBase;
@@ -63,14 +61,14 @@ class MediaFitsJob extends JobTypeBase {
       $report .= "Failed to get the media.\n";
       return ['result' => FALSE, "outcome" => $report];
     }
-    
-    // get the main source file
+
+    // Get the main source file.
     $source = $media->getSource();
     if (!$source instanceof File) {
       $report .= "Failed to get the media's source file.\n";
       return ['result' => FALSE, "outcome" => $report];
     }
-   
+
     $fid = $source->getSourceFieldValue($media);
     $file = \Drupal::entityTypeManager()->getStorage('file')->load($fid);
     if (!isset($file)) {
@@ -94,10 +92,10 @@ class MediaFitsJob extends JobTypeBase {
     if (json_last_error() == JSON_ERROR_NONE && $fit_json !== "false") {
       // Store the whole fits to json field.
       if ($media->hasField("field_media_file_fits")) {
-        
-        // Update fits field
+
+        // Update fits field.
         $media->field_media_file_fits->setValue($fit_json);
-  
+
         // Extract selective fields and save to other fields.
         $media->save();
       }
@@ -110,8 +108,8 @@ class MediaFitsJob extends JobTypeBase {
       $report .= "Unable to generate technical metadata for file, Please check the Fits configuration again.\n";
       return ['result' => FALSE, "outcome" => $report];
     }
-    
-    // TODO: write code to have metadata in file 
+
+    // @todo write code to have metadata in file
     return ['result' => $sucess, "outcome" => $report];
   }
 
@@ -184,7 +182,8 @@ class MediaFitsJob extends JobTypeBase {
             [
               'name' => 'datafile',
               'filename' => $file->label(),
-              'contents' => $fileStream, //file_get_contents($file->getFileUri()),
+        // file_get_contents($file->getFileUri()),
+              'contents' => $fileStream,
             ],
           ],
         ]);
