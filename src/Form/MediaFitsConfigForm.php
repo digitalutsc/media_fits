@@ -1,5 +1,8 @@
 <?php
 
+// phpcs:disable DrupalPractice.General.OptionsT.TforValue
+// phpcs:disable DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
+
 namespace Drupal\media_fits\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

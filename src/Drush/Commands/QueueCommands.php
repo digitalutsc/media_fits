@@ -15,11 +15,13 @@ class QueueCommands extends DrushCommands {
   /**
    * Queues jobs for media based on a CSV file or a comma-separated list.
    *
-   * @command media-fits:queue
-   * @aliases mfq
-   *
    * @param mixed $queueId
    *   The name of the queue you want to index it to.
+   * @param array $options
+   *   The array containing the command options.
+   *
+   * @command media-fits:queue
+   * @aliases mfq
    *
    * @option csv
    *   The full path to a CSV file containing media IDs.
@@ -28,7 +30,8 @@ class QueueCommands extends DrushCommands {
    *   A comma-separated list of media IDs (e.g., "1,2,3,4").
    *
    * @usage drush media-fits:queue --csv=/path/to/media_ids.csv
-   *   Reads the CSV file, skips the header row, and queues jobs for each media ID.
+   *   Reads the CSV file, skips the header row,
+   *   and queues jobs for each media ID.
    *
    * @usage drush media-fits:queue --mids="1,2,3,4"
    *   Directly queues jobs for media IDs 1, 2, 3, and 4.
@@ -37,8 +40,10 @@ class QueueCommands extends DrushCommands {
    */
   public function queueMediaJobs(
     $queueId,
-    $options = ['csv' => NULL,
-      'mids' => NULL],
+    $options = [
+      'csv' => NULL,
+      'mids' => NULL,
+    ],
   ) {
 
     $config = \Drupal::config('media_fits.fitsconfig');

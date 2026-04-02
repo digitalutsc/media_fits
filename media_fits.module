@@ -5,6 +5,9 @@
  * Contains fits.module.
  */
 
+// phpcs:disable Drupal.Files.LineLength.TooLong
+// phpcs:disable Drupal.NamingConventions.ValidFunctionName.InvalidPrefix
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\media\Entity\Media;
