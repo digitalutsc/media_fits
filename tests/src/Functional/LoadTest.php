@@ -4,12 +4,14 @@ namespace Drupal\Tests\islandora_lite_fits\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Simple test to ensure that main page loads with module enabled.
  *
  * @group islandora_lite_fits
  */
+#[RunTestsInSeparateProcesses]
 class LoadTest extends BrowserTestBase {
 
   /**
@@ -17,7 +19,22 @@ class LoadTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['islandora_lite_fits'];
+  protected static $modules = ['media_fits'];
+
+  /**
+   * The theme to install as the default for testing.
+   *
+   * Defaults to the install profile's default theme, if it specifies any.
+   *
+   * @var string
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  // phpcs:ignore -- Do not disable strict config schema checking in tests.
+  protected $strictConfigSchema = FALSE;
 
   /**
    * A user with permission to administer site configuration.
