@@ -1,17 +1,63 @@
 <?php
 
-// phpcs:disable DrupalPractice.General.OptionsT.TforValue
-// phpcs:disable DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
-
 namespace Drupal\media_fits\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class MediaFitsConfigForm definition.
  */
 class MediaFitsConfigForm extends ConfigFormBase {
+
+  /**
+   * The entity field manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a MediaFitsConfigForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
+   */
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    EntityFieldManagerInterface $entity_field_manager,
+    EntityTypeManagerInterface $entity_type_manager,
+  ) {
+    parent::__construct($config_factory);
+    $this->entityFieldManager = $entity_field_manager;
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -51,9 +97,9 @@ class MediaFitsConfigForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => 'Select Fits method:',
       '#options' => [
-        0 => '-- Select --',
-        'remote' => 'FITS Web Service',
-        'local' => 'FITS from the command-line',
+        0 => $this->t('-- Select --'),
+        'remote' => $this->t('FITS Web Service'),
+        'local' => $this->t('FITS from the command-line'),
       ],
       '#required' => TRUE,
       '#ajax' => [
@@ -100,7 +146,7 @@ class MediaFitsConfigForm extends ConfigFormBase {
     ];
 
     $queues = ['0' => "-- Select --"];
-    $queues = array_merge($queues, \Drupal::entityQuery('advancedqueue_queue')->execute());
+    $queues = array_merge($queues, $this->entityTypeManager->getStorage('advancedqueue_queue')->getQuery()->execute());
     $form['container']['fits-services-config']['op-config']['advancedqueue-id'] = [
       '#type' => 'select',
       '#name' => 'advancedqueue-id',
@@ -137,7 +183,7 @@ class MediaFitsConfigForm extends ConfigFormBase {
     ];
 
     // Select default fits fields.
-    $field_map = \Drupal::service('entity_field.manager')->getFieldMap();
+    $field_map = $this->entityFieldManager->getFieldMap();
     $node_field_map = $field_map['file'];
     $fields = array_keys($node_field_map);
     $fits_fields = [];
@@ -189,7 +235,7 @@ class MediaFitsConfigForm extends ConfigFormBase {
    * Query existing File types.
    */
   public function getFileTypes() {
-    $contentTypes = \Drupal::service('entity_type.manager')->getStorage('file_type')->loadMultiple();
+    $contentTypes = $this->entityTypeManager->getStorage('file_type')->loadMultiple();
     $types = [];
     foreach ($contentTypes as $contentType) {
       $types[$contentType->id()] = $contentType->label();

@@ -54,8 +54,6 @@ class MediaFitsJob extends JobTypeBase {
    */
   public function extractFits($media = NULL) {
     /** @var \Drupal\media\MediaInterface $media */
-    // phpcs:ignore -- Unused variable $config.
-    $config = \Drupal::config('media_fits.fitsconfig');
     $report = "";
     $sucess = TRUE;
     if (!isset($media)) {

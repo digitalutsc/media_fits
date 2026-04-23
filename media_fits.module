@@ -5,9 +5,6 @@
  * Contains fits.module.
  */
 
-// phpcs:disable Drupal.Files.LineLength.TooLong
-// phpcs:disable Drupal.NamingConventions.ValidFunctionName.InvalidPrefix
-
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\media\Entity\Media;
@@ -47,7 +44,7 @@ function media_fits_media_insert(EntityInterface $entity) {
   // Only extract Fits for File level only.
   if ('Media' === $entity->getEntityType()->getLabel()->getUntranslatedString()
       && 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
-    execute_media_fits_action($entity);
+    media_fits_execute_media_fits_action($entity);
   }
 }
 
@@ -57,7 +54,8 @@ function media_fits_media_insert(EntityInterface $entity) {
 /*function media_fits_media_update(EntityInterface $entity) {
 // Only extract Fits for File level only.
 if ('Media' === $entity->getEntityType()->getLabel()->getUntranslatedString()
-&& 1 === \Drupal::config('media_fits.fitsconfig')->get('fits-extract-ingesting')) {
+&& 1 === \Drupal::config('media_fits.fitsconfig')
+->get('fits-extract-ingesting')) {
 
 $media = Media::load($entity->id());
 $source_field_name = $media->getSource()->getConfiguration()['source_field'];
@@ -66,7 +64,8 @@ $current_file_id = $media->get($source_field_name)->target_id;
 $previous_revision_id = $media->getRevisionId() - 1;
 $previous_revision = \Drupal::entityTypeManager()->getStorage('media')->loadRevision($previous_revision_id);
 
-if (isset($source_field_name) && (isset($previous_revision) && $previous_revision->hasField($source_field_name))) {
+if (isset($source_field_name) && (isset($previous_revision) &&
+$previous_revision->hasField($source_field_name))) {
 $previous_file_id = $previous_revision->get($source_field_name)->target_id;
 } else {
 $previous_file_id = null; // or any other default value or action
@@ -74,7 +73,7 @@ $previous_file_id = null; // or any other default value or action
 
 if ($current_file_id !== $previous_file_id) {
 // A new file ID was generated.
-execute_media_fits_action($entity);
+media_fits_execute_media_fits_action($entity);
 }
 }
 }*/
@@ -82,7 +81,7 @@ execute_media_fits_action($entity);
 /**
  * Shared function call for execute Fits Action.
  */
-function execute_media_fits_action(EntityInterface $entity) {
+function media_fits_execute_media_fits_action(EntityInterface $entity) {
   // Fix warning when Config form hasn't been setup.
   $config = \Drupal::config('media_fits.fitsconfig');
   if (!isset($config) || empty($config->get('fits-advancedqueue_id'))) {
@@ -91,39 +90,4 @@ function execute_media_fits_action(EntityInterface $entity) {
   $media = Media::load($entity->id());
   $utils = \Drupal::service('media_fits.context_utils');
   $utils->executeFileReactions('\Drupal\media_fits\Plugin\ContextReaction\MediaFitsReaction', $media);
-}
-
-if (!function_exists('print_log')) {
-
-  /**
-   * Debug function: display any variable to error log.
-   */
-  function print_log($thing) {
-    error_log(print_r($thing, TRUE), 0);
-  }
-
-}
-
-if (!function_exists('logging')) {
-
-  /**
-   * Debug function: display any variable to current webpage.
-   */
-  function logging($thing) {
-    echo '<pre>';
-    print_r($thing);
-    echo '</pre>';
-  }
-
-}
-
-if (!function_exists('drupal_log')) {
-
-  /**
-   * Debug function: display any variable to drupal Reports Log messages.
-   */
-  function drupal_log($msg) {
-    \Drupal::logger(basename(__FILE__, '.module'))->error($msg);
-  }
-
 }
