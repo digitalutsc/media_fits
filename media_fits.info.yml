@@ -1,7 +1,7 @@
 name: 'Fits for media'
 type: module
 description: 'This module represent DSU''s approach toward Fits in our Islandora Lite Stack'
-core_version_requirement: ^8.8 || ^9 || ^10 || ^11
+core_version_requirement: ^10.2 || ^11
 package: 'custom'
 dependencies:
   - drupal:json_field

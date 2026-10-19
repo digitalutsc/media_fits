@@ -77,7 +77,8 @@ class MediaFitsJob extends JobTypeBase {
     // Extract Fits from xml.
     $fits_result = $this->getFits($file);
 
-    if ($fits_result['code'] === 500) {
+    // Only a 200 result carries FITS output (500: exception, 417: no output).
+    if ($fits_result['code'] !== 200) {
       $report .= 'Get Fits XML: ' . $fits_result['message'] . "\n";
       return ['result' => FALSE, "outcome" => $report];
     }
@@ -197,7 +198,6 @@ class MediaFitsJob extends JobTypeBase {
           return [
             "code" => 417,
             "message" => "Failed Get Fits Technical Metadata.",
-            'output' => $response->getBody()->getContents(),
           ];
         }
 
